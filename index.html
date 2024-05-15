@@ -5,7 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4択クイズ</title>
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
     #question-container {
+        display: none;
+    }
+    #question {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    #choices {
+        margin-bottom: 20px;
+    }
+    #feedback {
+        border: 2px solid black;
+        width: 300px;
+        height: 100px;
+        margin: 0 auto;
+        padding: 10px;
         display: none;
     }
 </style>
@@ -66,7 +85,8 @@
 
     function showQuestion() {
         const question = questions[currentQuestionIndex];
-        questionElement.innerText = question.question;
+        questionElement.innerText = '';
+        animateText(question.question, questionElement);
         choicesElement.innerHTML = '';
         question.choices.forEach(choice => {
             const button = document.createElement('button');
@@ -74,6 +94,17 @@
             button.addEventListener('click', () => selectAnswer(choice));
             choicesElement.appendChild(button);
         });
+    }
+
+    function animateText(text, element) {
+        let index = 0;
+        const interval = setInterval(() => {
+            element.textContent += text[index];
+            index++;
+            if (index === text.length) {
+                clearInterval(interval);
+            }
+        }, 50);
     }
 
     function selectAnswer(choice) {
@@ -84,6 +115,7 @@
         } else {
             feedbackElement.innerText = feedback.incorrect;
         }
+        feedbackElement.style.display = 'block';
         submitButton.style.display = 'none';
         nextButton.style.display = 'block';
     }
@@ -102,7 +134,7 @@
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.length) {
             showQuestion();
-            feedbackElement.innerText = '';
+            feedbackElement.style.display = 'none';
             submitButton.style.display = 'block';
             nextButton.style.display = 'none';
         } else {
