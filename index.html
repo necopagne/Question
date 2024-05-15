@@ -23,8 +23,15 @@
         border: 2px solid black;
         width: 300px;
         height: 100px;
-        margin: 0 auto;
+        margin: 0 auto 20px; /* 下部に20pxのマージンを追加 */
         padding: 10px;
+    }
+    #button-container {
+        margin-top: 20px; /* 上部に20pxのマージンを追加 */
+    }
+    #next {
+        display: inline-block; /* ボタンをブロック要素からインラインブロック要素に変更 */
+        vertical-align: middle; /* ボタンを垂直方向に中央に配置 */
     }
 </style>
 </head>
@@ -34,8 +41,10 @@
     <div id="question"></div>
     <div id="choices"></div>
     <div id="feedback"></div>
-    <button id="submit">答えを確認</button>
-    <button id="next" style="display:none;">次へ</button>
+    <div id="button-container"> <!-- ボタンを含むコンテナを追加 -->
+        <button id="submit">答えを確認</button>
+        <button id="next" style="display:none;">次へ</button>
+    </div>
 </div>
 
 <button id="start">スタート</button>
