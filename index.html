@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4択クイズ</title>
+<style>
+    #question-container {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="question-container">
+    <div id="question"></div>
+    <div id="choices"></div>
+    <div id="feedback"></div>
+    <button id="submit">答えを確認</button>
+    <button id="next" style="display:none;">次へ</button>
+</div>
+
+<button id="start">スタート</button>
+
+<script>
+    const startButton = document.getElementById('start');
+    const questionContainer = document.getElementById('question-container');
+    const questionElement = document.getElementById('question');
+    const choicesElement = document.getElementById('choices');
+    const submitButton = document.getElementById('submit');
+    const feedbackElement = document.getElementById('feedback');
+    const nextButton = document.getElementById('next');
+
+    const questions = [
+        {
+            question: "次のうち、最初のプログラミング言語はどれ？",
+            choices: ["C", "Java", "Python", "Fortran"],
+            correctAnswer: "Fortran",
+            feedback: {
+                correct: "正解！Fortranは最初の高水準プログラミング言語の一つです。",
+                incorrect: "不正解... Fortranは最初の高水準プログラミング言語です。"
+            }
+        },
+        {
+            question: "JavaScriptのデザインは誰によって行われた？",
+            choices: ["Brendan Eich", "Tim Berners-Lee", "Larry Page", "Bill Gates"],
+            correctAnswer: "Brendan Eich",
+            feedback: {
+                correct: "正解！JavaScriptはBrendan Eichによって設計されました。",
+                incorrect: "不正解... JavaScriptはBrendan Eichによって設計されました。"
+            }
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    startButton.addEventListener('click', startQuiz);
+    submitButton.addEventListener('click', checkAnswer);
+    nextButton.addEventListener('click', nextQuestion);
+
+    function startQuiz() {
+        startButton.style.display = 'none';
+        showQuestion();
+        questionContainer.style.display = 'block';
+    }
+
+    function showQuestion() {
+        const question = questions[currentQuestionIndex];
+        questionElement.innerText = question.question;
+        choicesElement.innerHTML = '';
+        question.choices.forEach(choice => {
+            const button = document.createElement('button');
+            button.innerText = choice;
+            button.addEventListener('click', () => selectAnswer(choice));
+            choicesElement.appendChild(button);
+        });
+    }
+
+    function selectAnswer(choice) {
+        const question = questions[currentQuestionIndex];
+        const feedback = question.feedback;
+        if (choice === question.correctAnswer) {
+            feedbackElement.innerText = feedback.correct;
+        } else {
+            feedbackElement.innerText = feedback.incorrect;
+        }
+        submitButton.style.display = 'none';
+        nextButton.style.display = 'block';
+    }
+
+    function checkAnswer() {
+        const selectedChoice = document.querySelector('input[name="choice"]:checked');
+        if (!selectedChoice) {
+            alert('答えを選んでください！');
+            return;
+        }
+        const choice = selectedChoice.value;
+        selectAnswer(choice);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+            feedbackElement.innerText = '';
+            submitButton.style.display = 'block';
+            nextButton.style.display = 'none';
+        } else {
+            alert('クイズ終了！');
+            questionContainer.style.display = 'none';
+        }
+    }
+
+</script>
+
+</body>
+</html>
