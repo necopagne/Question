@@ -18,20 +18,28 @@
     }
     #choices {
         margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .choice {
+        margin-bottom: 10px;
     }
     #feedback {
         border: 2px solid black;
         width: 300px;
         height: 100px;
-        margin: 0 auto 20px; /* 下部に20pxのマージンを追加 */
+        margin: 0 auto 20px;
         padding: 10px;
     }
     #button-container {
-        margin-top: 20px; /* 上部に20pxのマージンを追加 */
+        margin-top: 20px;
     }
     #next {
-        display: inline-block; /* ボタンをブロック要素からインラインブロック要素に変更 */
-        vertical-align: middle; /* ボタンを垂直方向に中央に配置 */
+        display: none; /* 最初は非表示 */
+    }
+    .correct {
+        color: red; /* 正解時の文字色を赤に */
     }
 </style>
 </head>
@@ -41,9 +49,8 @@
     <div id="question"></div>
     <div id="choices"></div>
     <div id="feedback"></div>
-    <div id="button-container"> <!-- ボタンを含むコンテナを追加 -->
-        <button id="submit">答えを確認</button>
-        <button id="next" style="display:none;">次へ</button>
+    <div id="button-container">
+        <button id="next">次へ</button>
     </div>
 </div>
 
@@ -54,7 +61,6 @@
     const questionContainer = document.getElementById('question-container');
     const questionElement = document.getElementById('question');
     const choicesElement = document.getElementById('choices');
-    const submitButton = document.getElementById('submit');
     const feedbackElement = document.getElementById('feedback');
     const nextButton = document.getElementById('next');
 
@@ -82,14 +88,12 @@
     let currentQuestionIndex = 0;
 
     startButton.addEventListener('click', startQuiz);
-    submitButton.addEventListener('click', checkAnswer);
     nextButton.addEventListener('click', nextQuestion);
 
     function startQuiz() {
         startButton.style.display = 'none';
         showQuestion();
         questionContainer.style.display = 'block';
-        feedbackElement.style.display = 'block';
     }
 
     function showQuestion() {
@@ -100,6 +104,7 @@
         question.choices.forEach(choice => {
             const button = document.createElement('button');
             button.innerText = choice;
+            button.classList.add('choice');
             button.addEventListener('click', () => selectAnswer(choice));
             choicesElement.appendChild(button);
         });
@@ -119,23 +124,15 @@
     function selectAnswer(choice) {
         const question = questions[currentQuestionIndex];
         const feedback = question.feedback;
+        const choices = choicesElement.querySelectorAll('.choice');
+        choices.forEach(choice => choice.disabled = true); // 選択後に選択肢を無効化
         if (choice === question.correctAnswer) {
             feedbackElement.innerText = feedback.correct;
+            feedbackElement.classList.add('correct'); // 正解時にクラスを追加
         } else {
             feedbackElement.innerText = feedback.incorrect;
         }
-        submitButton.style.display = 'none';
         nextButton.style.display = 'block';
-    }
-
-    function checkAnswer() {
-        const selectedChoice = document.querySelector('input[name="choice"]:checked');
-        if (!selectedChoice) {
-            alert('答えを選んでください！');
-            return;
-        }
-        const choice = selectedChoice.value;
-        selectAnswer(choice);
     }
 
     function nextQuestion() {
@@ -143,7 +140,9 @@
         if (currentQuestionIndex < questions.length) {
             showQuestion();
             feedbackElement.innerText = '';
-            submitButton.style.display = 'block';
+            feedbackElement.classList.remove('correct'); // 次の問題へ進むときに正解表示をリセット
+            const choices = choicesElement.querySelectorAll('.choice');
+            choices.forEach(choice => choice.disabled = false); // 次の問題へ進むときに選択肢を有効化
             nextButton.style.display = 'none';
         } else {
             alert('クイズ終了！');
