@@ -25,7 +25,6 @@
         height: 100px;
         margin: 0 auto;
         padding: 10px;
-        display: none;
     }
 </style>
 </head>
@@ -39,7 +38,7 @@
     <button id="next" style="display:none;">次へ</button>
 </div>
 
-<button id="start">スタート!</button>
+<button id="start">スタート</button>
 
 <script>
     const startButton = document.getElementById('start');
@@ -81,6 +80,7 @@
         startButton.style.display = 'none';
         showQuestion();
         questionContainer.style.display = 'block';
+        feedbackElement.style.display = 'block';
     }
 
     function showQuestion() {
@@ -115,7 +115,6 @@
         } else {
             feedbackElement.innerText = feedback.incorrect;
         }
-        feedbackElement.style.display = 'block';
         submitButton.style.display = 'none';
         nextButton.style.display = 'block';
     }
@@ -134,7 +133,7 @@
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.length) {
             showQuestion();
-            feedbackElement.style.display = 'none';
+            feedbackElement.innerText = '';
             submitButton.style.display = 'block';
             nextButton.style.display = 'none';
         } else {
