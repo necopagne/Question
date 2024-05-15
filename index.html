@@ -8,6 +8,12 @@
     body {
         font-family: Arial, sans-serif;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
     }
     #question-container {
         display: none;
@@ -33,10 +39,11 @@
         padding: 10px;
     }
     #button-container {
-        margin-top: 20px;
+        margin-top: auto;
     }
     #next {
         display: none; /* 最初は非表示 */
+        margin-top: 20px;
     }
     .correct {
         color: red; /* 正解時の文字色を赤に */
@@ -125,8 +132,6 @@
     function selectAnswer(choice) {
         const question = questions[currentQuestionIndex];
         const feedback = question.feedback;
-        const choices = choicesElement.querySelectorAll('.choice');
-        choices.forEach(choice => choice.disabled = true); // 選択後に選択肢を無効化
         if (choice === question.correctAnswer) {
             feedbackElement.innerText = feedback.correct;
             feedbackElement.classList.add('correct'); // 正解時にクラスを追加
@@ -142,8 +147,6 @@
             showQuestion();
             feedbackElement.innerText = '';
             feedbackElement.classList.remove('correct'); // 次の問題へ進むときに正解表示をリセット
-            const choices = choicesElement.querySelectorAll('.choice');
-            choices.forEach(choice => choice.disabled = false); // 次の問題へ進むときに選択肢を有効化
             nextButton.style.display = 'none';
         } else {
             alert('クイズ終了！');
